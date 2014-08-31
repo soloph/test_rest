@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>RestTest</title>
+<script type="text/javascript" src="/static/javascript/jquery-1.7.2.min.js"></script>
+</head>
+<body>
+<form method="post"  action=""  enctype="multipart/form-data" id="js_send_email">
+<div><span>Email：</span><input id="email" value="" name="email"/></div>
+<div><span>First Name：</span><input id="first_name" value="" name="first_name"/></div>
+<div><span>Last Name：</span><input id="last_name" value="" name="last_name"/></div>
+<div><span>Contact Number：</span><input id="contact_number" value="" name="contact_number"/></div>
+<div><span>Title：</span><input id="title" value="" name="title"/></div>
+<div><span>Content：</span><textarea id="content" name="content"></textarea></div>
+<div><span>Link：</span><input id="link" value="" name="link"/></div>
+<button type="button" id="submit">Submit</button>
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#submit").click(function(){
+		email = $("#email").val();
+		first_name = $("#first_name").val();
+		last_name = $("#last_name").val();
+		contact_number = $("#contact_number").val();
+		title = $("#title").val();
+		content = $("#content").val();
+		link = $("#link").val();
+		if(isEmail(email)){
+			if(isEmpty(first_name) || isEmpty(last_name) || isEmpty(contact_number) || isEmpty(title) || isEmpty(content) || isEmpty(link)){
+				alert("field can not be empty!");
+			}else{
+				path = "/email/add";
+				data = {"email":email,"first_name":first_name,"last_name":last_name,"contact_number":contact_number,"title":title,"content":content,"link":link}
+				ajax_post(path, data, function(result){
+					if(result.status==200){
+						alert("success!");
+					}else{
+						alert("failed!");
+					}
+				});
+			}
+		}else{
+			alert("error email format!");
+		}
+	});
+});
+
+function isEmail(str){
+    var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/;
+    return reg.test(str);
+}
+
+function isEmpty(str){
+	return (str == null || str.length <= 0);
+}
+
+function getCookie(name) {
+    var r = top.document.cookie.match("\\b" + name + "=([^;]*)\\b");
+    return r ? r[1] : undefined;
+}
+
+function ajax_post(path, data, callback){
+	if(callback==undefined){
+		callback=function(result){};
+	}
+	data["_xsrf"] = getCookie("_xsrf");
+	$.ajax({
+			type: "POST",
+			url: path,
+			async:false,
+			data: data ,
+			dataType: 'json',
+			success: function (result, textStatus){
+				callback(result);
+			},
+			error: function (XMLHttpRequest, textStatus, errorThrown){
+				try{
+					var result = jQuery.parseJSON(XMLHttpRequest.responseText);
+					callback(result);
+				}catch(e){
+					alert("submit error!");
+				}
+			}
+	});
+}
+</script>
+</body>
+</html>
