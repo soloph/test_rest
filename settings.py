@@ -26,10 +26,6 @@ DEFAULT_MEMCACHE_LOCATION = '127.0.0.1:11211'
 ACCESS_KEY = '1c420a5d0cf437d260da8e9d641dfb13'
 SECRET_ID = 'SHAdsahdadw127862dehadq'
 
-EMAIL_HOST = 'smtp.exmail.qq.com'
-EMAIL_PORT = 25
-
-DEFAULT_EMAIL_USER = 'soloph@sina.com'
 DEFAULT_EMAIL_SUBJECT = 'Thanks for your application'
 DEFAULT_EMAIL_CONTENT = '> Dear %s,\n>\n> We have received your application. Please do NOT reply this email.\n>\n> Thanks,\n> Tech Team'
 

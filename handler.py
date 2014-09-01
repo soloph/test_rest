@@ -4,7 +4,7 @@
 import datetime
 import settings
 from cache import cache
-from ses import ases
+from util_mail import send_mail
 from tornado.web import RequestHandler, asynchronous
 
 class EmailHandler(RequestHandler):
@@ -23,9 +23,10 @@ class EmailHandler(RequestHandler):
     link = self.get_argument("link", None)
     
     cache.set(str(email), [first_name, last_name, contact_number, title, content, link])
-    ases.send_mail(settings.DEFAULT_EMAIL_USER, settings.DEFAULT_EMAIL_SUBJECT, settings.DEFAULT_EMAIL_CONTENT % (last_name), email)
-    ases.send_mail(settings.DEFAULT_EMAIL_USER, settings.DEDICATED_EMAIL_SUBJECT % (email), settings.DEDICATED_EMAIL_CONTENT % (last_name, first_name, datetime.datetime.now()), settings.DEDICATED_EMAIL_USER)
-    self.finish()
+    send_mail([email], settings.DEFAULT_EMAIL_SUBJECT, settings.DEFAULT_EMAIL_CONTENT % (last_name))
+    send_mail([settings.DEDICATED_EMAIL_USER], settings.DEDICATED_EMAIL_SUBJECT % (email), settings.DEDICATED_EMAIL_CONTENT % (last_name, first_name, datetime.datetime.now()))
+
+    self.finish({"status":200})
 
 def main():
   pass
